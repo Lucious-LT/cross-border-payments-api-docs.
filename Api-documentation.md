@@ -11,9 +11,10 @@ The `/api/v1/payments` endpoint allows users to initiate a cross-border payment 
 | Authorization | Bearer token for authentication | ✅ Yes   | Bearer your_api_key     |
 | Content-Type  | Data format type               | ✅ Yes   | application/json        |
 
-###### 📌 Request Body (JSON Format)
 
-Explain required parameters and their data types:
+### 📌 Request Body (JSON Format)  
+
+#### Required Parameters and Their Data Types  
 
 ```json
 {
@@ -33,20 +34,44 @@ Explain required parameters and their data types:
 }
 
 
-📌 4. Error Handling
-Common error responses with explanations:
-HTTP Status	Error Code	Message	Cause
-400 Bad Request	INVALID_REQUEST	"Invalid bank code for the recipient."	Bank code does not match a valid entry.
-400 Bad Request	MISSING_PARAMETERS	"Amount, currency, and recipient details are required."	Missing required fields in the request body.
-401 Unauthorized	INVALID_API_KEY	"Authentication failed. Invalid API key."	API key is missing or incorrect.
-500 Internal Server Error	SERVER_ERROR	"Unexpected server error. Please try again later."	Generic server-side error.
+#####📌 Parameter Breakdown  
 
-📌 5. Example Requests & Responses
-Valid Request using cURL
+| **Parameter**        | **Type**   | **Description**                                      |
+|----------------------|-----------|------------------------------------------------------|
+| **amount**          | `number`   | The transaction amount. Example: `100.00`           |
+| **currency**        | `string`   | The currency code (ISO 4217 format). Example: `"USD"` |
+| **sender**          | `object`   | Sender details.                                     |
+| ├── `name`         | `string`   | Sender's full name. Example: `"John Doe"`          |
+| ├── `email`        | `string`   | Sender's email address. Example: `"john.doe@x.com"` |
+| **recipient**       | `object`   | Recipient details.                                  |
+| ├── `name`         | `string`   | Recipient's full name. Example: `"Jane Smith"`     |
+| ├── `accountNumber`| `string`   | Recipient's bank account number. Example: `"0987654321"` |
+| ├── `bankCode`     | `string`   | The recipient's bank code. Example: `"XYZ456"`     |
+| ├── `country`      | `string`   | Recipient's country. Example: `"USA"`              |
+| **reference**       | `string`   | Unique transaction reference ID. Example: `"INV-12345"` |
 
+
+#### 4.📌 Error Handling  
+
+Common error responses and their meanings:  
+
+| HTTP Status          | Error Code         | Message                                          | Cause                                      |
+|----------------------|-------------------|--------------------------------------------------|--------------------------------------------|
+| `400 Bad Request`   | `INVALID_REQUEST`   | "Invalid bank code for the recipient."          | Bank code does not match a valid entry.   |
+| `400 Bad Request`   | `MISSING_PARAMETERS` | "Amount, currency, and recipient details are required." | Missing required fields in the request body. |
+| `401 Unauthorized`  | `INVALID_API_KEY`    | "Authentication failed. Invalid API key."       | API key is missing or incorrect.          |
+| `500 Internal Server Error` | `SERVER_ERROR`      | "Unexpected server error. Please try again later." | Generic server-side error. |
+
+
+
+## 📌 Example Requests & Responses
+
+### 📝 Valid Request using cURL
+
+```bash
 curl -X POST https://api.example.com/api/v1/payments \
-     -H "Authorization: Bearer your_api_key" 
-     -H "Content-Type: application/json" 
+     -H "Authorization: Bearer your_api_key" \
+     -H "Content-Type: application/json" \
      -d '{
            "amount": 100.00,
            "currency": "USD",
@@ -63,8 +88,10 @@ curl -X POST https://api.example.com/api/v1/payments \
            "reference": "INV-12345"
          }'
 
-Example Response (Success)
-json
+
+✅ Success Response (201 Created)
+{ "key": "value" }
+
 
 {
   "transactionId": "TXN789456123",
@@ -78,8 +105,8 @@ json
   }
 }
 
-Example Response (Error - Invalid Bank Code)
-json
+ Example Error Response (400 Bad Request - INVALID_REQUEST ❌)
+ { "key": "value" }
 
 {
   "error": "INVALID_REQUEST",
